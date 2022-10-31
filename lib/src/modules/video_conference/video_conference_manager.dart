@@ -1,7 +1,9 @@
+import 'package:chat_room/src/modules/video_conference/models/twilio_access_token.dart';
 import 'package:flutter/material.dart';
 
 import '../../routes.dart';
 import '../../shared/pages/route_not_found_page.dart';
+import 'services/twilio_service.dart';
 
 part 'room/room_page.dart';
 part 'conference/conference_page.dart';
@@ -19,11 +21,13 @@ class _VideoConferenceManagerState extends State<VideoConferenceManager> {
   @override
   Widget build(BuildContext context) => _VideoConferenceManagerView(this);
 
+  void _onSubmitRoomPage(TwilioAccessToken accessToken) {}
+
   Route _onGenerateRoute(RouteSettings settings) {
     late Widget page;
     switch (settings.name) {
       case routeVideoConferenceJoinRoom:
-        page = const RoomPage();
+        page = RoomPage(onSubmit: _onSubmitRoomPage);
         break;
       case routeVideoConferenceRoom:
         page = const ConferecePage();
