@@ -1,6 +1,6 @@
 import 'dart:async';
+
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
 
 import '../models/models.dart';
 
@@ -20,7 +20,7 @@ class TwilioFunctionsService implements ITwilioFunctionsService {
   @override
   Future<TwilioAccessToken> createToken(String identity) async {
     try {
-      final String roomId = const Uuid().v4();
+      const String roomId = 'Awesome Chat Room';
       Map<String, String> header = {
         'Content-Type': 'application/json',
       };

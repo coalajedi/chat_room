@@ -1,12 +1,19 @@
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:twilio_programmable_video/twilio_programmable_video.dart';
+import 'package:uuid/uuid.dart';
 
-import '../../routes.dart';
-import '../../shared/pages/route_not_found_page.dart';
-import 'models/models.dart';
-import 'services/twilio_service.dart';
+import '../../../routes.dart';
+import '../../../shared/pages/route_not_found_page.dart';
+import '../models/models.dart';
+import '../services/twilio_service.dart';
+import '../widgets/participant_widget.dart';
 
-part 'conference/conference_page.dart';
-part 'room/room_page.dart';
+part 'conference_page.dart';
+part 'room_page.dart';
 
 class VideoConferenceManager extends StatefulWidget {
   final String subRoute;
@@ -18,10 +25,18 @@ class VideoConferenceManager extends StatefulWidget {
 
 class _VideoConferenceManagerState extends State<VideoConferenceManager> {
   final _videoConferenceNavigatorKey = GlobalKey<NavigatorState>();
+
+  late final TwilioAccessToken _twilioAccessToken;
   @override
   Widget build(BuildContext context) => _VideoConferenceManagerView(this);
 
-  void _onSubmitRoomPage(TwilioAccessToken accessToken) {}
+  void _onSubmitRoomPage(TwilioAccessToken accessToken) {
+    _twilioAccessToken = accessToken;
+    if (mounted) {
+      _videoConferenceNavigatorKey.currentState
+          ?.pushNamed(routeVideoConferenceRoom);
+    }
+  }
 
   Route _onGenerateRoute(RouteSettings settings) {
     late Widget page;
@@ -30,7 +45,7 @@ class _VideoConferenceManagerState extends State<VideoConferenceManager> {
         page = RoomPage(onSubmit: _onSubmitRoomPage);
         break;
       case routeVideoConferenceRoom:
-        page = const ConferecePage();
+        page = ConferecePage(twilioToken: _twilioAccessToken);
         break;
       default:
         page = const RouteNotFoundPage();

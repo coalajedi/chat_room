@@ -1,4 +1,4 @@
-part of '../video_conference_manager.dart';
+part of 'video_conference_manager.dart';
 
 class RoomPage extends StatefulWidget {
   final void Function(TwilioAccessToken accessToken) onSubmit;
@@ -16,6 +16,12 @@ class _RoomPageController extends State<RoomPage> {
   bool isLoading = false;
   bool isFormValid = false;
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   _submit() async {
     if (mounted) {
       setState(() => isLoading = true);
@@ -26,10 +32,6 @@ class _RoomPageController extends State<RoomPage> {
       final twilioRoomTokenResponse = await _backendService.createToken(name);
 
       widget.onSubmit(twilioRoomTokenResponse);
-
-      if (mounted) {
-        Navigator.pushNamed(context, routeVideoConferenceRoom);
-      }
     } catch (e) {
       _onError('Something wrong happened when getting the access token');
     } finally {
@@ -66,6 +68,12 @@ class _RoomPageController extends State<RoomPage> {
 
   @override
   Widget build(BuildContext context) => _RoomPageView(this);
+
+  void _onExitPressed() {
+    if (mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
 }
 
 class _RoomPageView extends StatelessWidget {
@@ -94,10 +102,18 @@ class _RoomPageView extends StatelessWidget {
 
   Padding get _paddingTop => const Padding(padding: EdgeInsets.only(top: 16.0));
 
+  PreferredSizeWidget get _appBar => AppBar(
+        leading: IconButton(
+          onPressed: _controller._onExitPressed,
+          icon: const Icon(Icons.chevron_left),
+        ),
+        title: Text(appBarTitle),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(appBarTitle)),
+      appBar: _appBar,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

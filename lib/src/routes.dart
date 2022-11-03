@@ -1,7 +1,7 @@
 import 'package:chat_room/src/modules/home/home_page.dart';
 import 'package:flutter/material.dart';
 
-import 'modules/video_conference/video_conference_manager.dart';
+import 'modules/video_conference/pages/video_conference_manager.dart';
 import 'shared/pages/route_not_found_page.dart';
 
 const String routeHome = '/';
