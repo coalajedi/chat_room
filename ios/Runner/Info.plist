@@ -47,5 +47,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>NSCameraUsageDescription</key>
+    <string>We need camera's permission to make the video conference</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone's permission to make the video conference</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
 </dict>
 </plist>
