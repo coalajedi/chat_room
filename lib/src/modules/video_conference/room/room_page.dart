@@ -10,15 +10,15 @@ class RoomPage extends StatefulWidget {
 }
 
 class _RoomPageController extends State<RoomPage> {
+  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _backendService = TwilioFunctionsService();
   bool isLoading = false;
+  bool isFormValid = false;
 
-  submit() async {
+  _submit() async {
     if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
+      setState(() => isLoading = true);
     }
 
     try {
@@ -33,13 +33,11 @@ class _RoomPageController extends State<RoomPage> {
     } catch (e) {
       _onError('Something wrong happened when getting the access token');
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
   }
 
-  _onError(String errorMessage) {
+  void _onError(String errorMessage) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -50,20 +48,68 @@ class _RoomPageController extends State<RoomPage> {
     }
   }
 
+  String? _validateNameTextField(String? value) {
+    if (value?.isEmpty ?? true) {
+      return 'Required field';
+    }
+
+    return null;
+  }
+
+  void _onFormChanged() {
+    if (mounted) {
+      setState(() {
+        isFormValid = _formKey.currentState?.validate() ?? false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => _RoomPageView(this);
 }
 
 class _RoomPageView extends StatelessWidget {
   final _RoomPageController _controller;
-  const _RoomPageView(this._controller, {super.key});
+  const _RoomPageView(this._controller);
 
   RoomPage get widget => _controller.widget;
+
+  final appBarTitle = 'Join Room';
+
+  Form get _form => Form(
+        key: _controller._formKey,
+        onChanged: _controller._onFormChanged,
+        child: TextFormField(
+          controller: _controller._nameController,
+          validator: _controller._validateNameTextField,
+        ),
+      );
+
+  Widget get _formButton => _controller.isLoading
+      ? const Center(child: CircularProgressIndicator.adaptive())
+      : ElevatedButton(
+          onPressed: _controller.isFormValid ? _controller._submit : null,
+          child: const Text('Join Room'),
+        );
+
+  Padding get _paddingTop => const Padding(padding: EdgeInsets.only(top: 16.0));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text(appBarTitle)),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _form,
+            _paddingTop,
+            _formButton,
+          ],
+        ),
+      ),
     );
   }
 }
