@@ -1,23 +1,23 @@
-import 'package:chat_room/src/modules/video_conference/models/twilio_access_token.dart';
 import 'package:flutter/material.dart';
 
 import '../../routes.dart';
 import '../../shared/pages/route_not_found_page.dart';
+import 'models/models.dart';
 import 'services/twilio_service.dart';
 
-part 'room/room_page.dart';
 part 'conference/conference_page.dart';
+part 'room/room_page.dart';
 
 class VideoConferenceManager extends StatefulWidget {
-  const VideoConferenceManager({super.key});
+  final String subRoute;
+  const VideoConferenceManager({super.key, required this.subRoute});
 
   @override
   State<VideoConferenceManager> createState() => _VideoConferenceManagerState();
 }
 
 class _VideoConferenceManagerState extends State<VideoConferenceManager> {
-  final GlobalKey<NavigatorState> _videoConferenceNavigatorKey =
-      GlobalKey<NavigatorState>();
+  final _videoConferenceNavigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) => _VideoConferenceManagerView(this);
 
@@ -51,9 +51,12 @@ class _VideoConferenceManagerView extends StatelessWidget {
   VideoConferenceManager get widget => _controller.widget;
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: _controller._videoConferenceNavigatorKey,
-      onGenerateRoute: _controller._onGenerateRoute,
+    return Scaffold(
+      body: Navigator(
+        key: _controller._videoConferenceNavigatorKey,
+        initialRoute: widget.subRoute,
+        onGenerateRoute: _controller._onGenerateRoute,
+      ),
     );
   }
 }

@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
           child: ElevatedButton(
             child: const Text('Join in a video conference'),
             onPressed: () =>
-                Navigator.pushNamed(context, routeVideoConferenceJoinRoom),
+                Navigator.of(context).pushNamed(routeVideoConferenceStart),
           ),
         ),
       ),

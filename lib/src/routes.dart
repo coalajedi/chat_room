@@ -7,18 +7,21 @@ import 'shared/pages/route_not_found_page.dart';
 const String routeHome = '/';
 const String routeNotfound = '/not-found';
 
-/// Nested nav in Video Conference
+/// NESTED NAVIGATION IN [video-conference] ROUTE
 const String routePrefixVideoConference = '/video-conference/';
-const String routeVideoConferenceJoinRoom =
-    '${routePrefixVideoConference}join-room/';
-const String routeVideoConferenceRoom = '$routePrefixVideoConference/room/';
+const String routeVideoConferenceStart =
+    '$routePrefixVideoConference$routeVideoConferenceJoinRoom';
+const String routeVideoConferenceJoinRoom = 'join-room';
+const String routeVideoConferenceRoom = 'room';
 
 Route onGenerateRoute(RouteSettings settings) {
   late Widget page;
   if (settings.name == routeHome) {
     page = const HomePage();
   } else if (settings.name?.startsWith(routePrefixVideoConference) ?? false) {
-    page = const VideoConferenceManager();
+    final subRoute =
+        settings.name!.substring(routePrefixVideoConference.length);
+    page = VideoConferenceManager(subRoute: subRoute);
   } else {
     settings = settings.copyWith(name: routeNotfound);
     page = const RouteNotFoundPage();
